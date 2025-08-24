@@ -14,6 +14,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY app.py .
 
+# Create a non-root user and switch to it
+RUN useradd -m -u 1000 user
+USER user
+
 # Create directory for data files and set proper permissions
 RUN mkdir -p /app/data && \
     touch /app/data/database.db /app/data/error.log && \
