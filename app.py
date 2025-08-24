@@ -5,7 +5,7 @@ import time
 import os
 from flask import Flask, request
 
-app = Flask(_name_)
+app = Flask(__name__)  # Double underscores on both sides
 
 # ================== CONFIG ==================
 # Get values from environment variables with fallbacks
