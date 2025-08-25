@@ -505,7 +505,9 @@ def webhook():
     else:
         return 'Invalid content type', 403
 
-if _name_ == '_main_':
+# ... your existing code ...
+
+if __name__ == '__main__':
     print("✅ Setting up webhook...")
     bot.remove_webhook()
     time.sleep(1)
