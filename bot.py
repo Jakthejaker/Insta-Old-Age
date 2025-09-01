@@ -645,7 +645,19 @@ def run_bot_loop():
             traceback.print_exc()
             time.sleep(5)
 
-if _name_ == "_main_":
+# ... rest of your code ...
+
+def run_bot_loop():
+    while True:
+        try:
+            print("Starting Instagram Old Age bot polling...")
+            bot.infinity_polling(skip_pending=True, timeout=20, long_polling_timeout=15)
+        except Exception as e:
+            print(f"Bot crashed, restarting in 5s... Error: {e}")
+            traceback.print_exc()
+            time.sleep(5)
+
+if __name__ == "__main__":
     print("Starting Instagram Old Age bot in background thread...")
     t = threading.Thread(target=run_bot_loop)
     t.daemon = True
@@ -654,6 +666,5 @@ if _name_ == "_main_":
     print(f"Starting Flask server on port {port}")
 
     app.run(host="0.0.0.0", port=port)
-
 
 
