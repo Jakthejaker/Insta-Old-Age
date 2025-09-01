@@ -49,9 +49,9 @@ SEND_DELAY = float(os.getenv("SEND_DELAY", "0.1"))  # Increased delay for safety
 
 # ---------------- Bot & Flask ----------------
 bot = telebot.TeleBot(BOT_TOKEN)
-# ... rest of your code remains the same ...
+# ... rest of your code ...
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     print("Starting Instagram Old Age bot in background thread...")
     t = threading.Thread(target=run_bot_loop)
     t.daemon = True
