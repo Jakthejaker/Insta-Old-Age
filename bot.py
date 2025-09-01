@@ -49,17 +49,8 @@ SEND_DELAY = float(os.getenv("SEND_DELAY", "0.1"))  # Increased delay for safety
 
 # ---------------- Bot & Flask ----------------
 bot = telebot.TeleBot(BOT_TOKEN)
-# ... rest of your code ...
+app = Flask(__name__)
 
-if __name__ == "__main__":
-    print("Starting Instagram Old Age bot in background thread...")
-    t = threading.Thread(target=run_bot_loop)
-    t.daemon = True
-    t.start()
-    port = int(os.getenv("PORT", "10000"))
-    print(f"Starting Flask server on port {port}")
-
-    app.run(host="0.0.0.0", port=port)
 # ---------------- JSON File Storage ----------------
 DATA_FILE = "bot_data.json"
 
@@ -645,18 +636,7 @@ def run_bot_loop():
             traceback.print_exc()
             time.sleep(5)
 
-# ... rest of your code ...
-
-def run_bot_loop():
-    while True:
-        try:
-            print("Starting Instagram Old Age bot polling...")
-            bot.infinity_polling(skip_pending=True, timeout=20, long_polling_timeout=15)
-        except Exception as e:
-            print(f"Bot crashed, restarting in 5s... Error: {e}")
-            traceback.print_exc()
-            time.sleep(5)
-
+# ---------------- Main entry point ----------------
 if __name__ == "__main__":
     print("Starting Instagram Old Age bot in background thread...")
     t = threading.Thread(target=run_bot_loop)
@@ -666,5 +646,3 @@ if __name__ == "__main__":
     print(f"Starting Flask server on port {port}")
 
     app.run(host="0.0.0.0", port=port)
-
-
