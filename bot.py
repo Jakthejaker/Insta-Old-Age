@@ -19,7 +19,7 @@ from collections import defaultdict
 try:
     import telebot
     from telebot import types
-    from flask import Flask
+    from flask import Flask, request
 except ImportError as e:
     print(f"Import error: {e}")
     print("Please make sure all required packages are installed")
@@ -625,25 +625,46 @@ def home():
 def ping_test():
     return "Bot is alive 🚀", 200
 
-# ---------------- Bot runner ----------------
-def run_bot():
-    print("Starting bot polling...")
-    while True:
-        try:
-            bot.infinity_polling(skip_pending=True, timeout=20, long_polling_timeout=15)
-        except Exception as e:
-            print(f"Bot crashed, restarting in 5s... Error: {e}")
-            traceback.print_exc()
-            time.sleep(5)
+# Webhook route for Telegram
+@app.route('/webhook', methods=['POST'])
+def webhook():
+    if request.headers.get('content-type') == 'application/json':
+        json_string = request.get_data().decode('utf-8')
+        update = telebot.types.Update.de_json(json_string)
+        bot.process_new_updates([update])
+        return ''
+    else:
+        return 'Invalid content type', 403
 
 # ---------------- Main entry point ----------------
 if __name__ == "__main__":
-    # Start the bot in a separate thread
-    bot_thread = threading.Thread(target=run_bot)
-    bot_thread.daemon = True
-    bot_thread.start()
+    # Remove any existing webhook
+    bot.remove_webhook()
+    time.sleep(1)
+    
+    # Set up webhook
+    port = int(os.getenv("PORT", "10000"))
+    webhook_url = os.getenv("WEBHOOK_URL", f"https://your-app-name.onrender.com/webhook")
+    
+    if webhook_url:
+        bot.set_webhook(url=webhook_url)
+        print(f"Webhook set to: {webhook_url}")
+    else:
+        print("Warning: WEBHOOK_URL not set, using polling fallback")
+        # Start polling in a separate thread as fallback
+        def poll():
+            while True:
+                try:
+                    bot.infinity_polling(skip_pending=True, timeout=20, long_polling_timeout=15)
+                except Exception as e:
+                    print(f"Bot crashed, restarting in 5s... Error: {e}")
+                    traceback.print_exc()
+                    time.sleep(5)
+        
+        poll_thread = threading.Thread(target=poll)
+        poll_thread.daemon = True
+        poll_thread.start()
     
     # Start the Flask app
-    port = int(os.getenv("PORT", "10000"))
     print(f"Starting Flask server on port {port}")
     app.run(host="0.0.0.0", port=port)
