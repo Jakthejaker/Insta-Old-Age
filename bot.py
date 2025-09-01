@@ -194,7 +194,7 @@ def send_join_prompt(user_id):
     markup.add(types.InlineKeyboardButton("✅ I Joined", callback_data="check_subs"))
     text = (
         "🚀 <b>Welcome to Premium Diamond Bot</b> 🚀\n\n"
-        "🔒 To accessa our bot features, please <b>join all our channels</b> below:\n\n"
+        "🔒 To access our bot features, please <b>join all our channels</b> below:\n\n"
         "⭐ Instagram Old Age\n"
         "💎 Daily bonuses\n"
         "🎁 Special rewards\n\n"
@@ -626,10 +626,10 @@ def ping_test():
     return "Bot is alive 🚀", 200
 
 # ---------------- Bot runner ----------------
-def run_bot_loop():
+def run_bot():
+    print("Starting bot polling...")
     while True:
         try:
-            print("Starting Instagram Old Age bot polling...")
             bot.infinity_polling(skip_pending=True, timeout=20, long_polling_timeout=15)
         except Exception as e:
             print(f"Bot crashed, restarting in 5s... Error: {e}")
@@ -638,11 +638,12 @@ def run_bot_loop():
 
 # ---------------- Main entry point ----------------
 if __name__ == "__main__":
-    print("Starting Instagram Old Age bot in background thread...")
-    t = threading.Thread(target=run_bot_loop)
-    t.daemon = True
-    t.start()
+    # Start the bot in a separate thread
+    bot_thread = threading.Thread(target=run_bot)
+    bot_thread.daemon = True
+    bot_thread.start()
+    
+    # Start the Flask app
     port = int(os.getenv("PORT", "10000"))
     print(f"Starting Flask server on port {port}")
-
     app.run(host="0.0.0.0", port=port)
