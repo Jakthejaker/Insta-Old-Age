@@ -49,7 +49,7 @@ SEND_DELAY = float(os.getenv("SEND_DELAY", "0.1"))  # Increased delay for safety
 
 # ---------------- Bot & Flask ----------------
 bot = telebot.TeleBot(BOT_TOKEN)
-app = Flask'__name__'
+app = Flask('__name__')
 # ---------------- JSON File Storage ----------------
 DATA_FILE = "bot_data.json"
 
@@ -644,4 +644,5 @@ if _name_ == "_main_":
     print(f"Starting Flask server on port {port}")
 
     app.run(host="0.0.0.0", port=port)
+
 
