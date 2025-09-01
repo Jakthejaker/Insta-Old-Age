@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  telegram-bot:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
+      - PGDATABASE=${PGDATABASE}
+      - PGUSER=${PGUSER}
+      - PGPASSWORD=${PGPASSWORD}
+      - PGHOST=${PGHOST}
+      - PGPORT=${PGPORT}
+    restart: unless-stopped
+
+  # If you want to include a local PostgreSQL database for development
+  postgres:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=${PGDATABASE}
+      - POSTGRES_USER=${PGUSER}
+      - POSTGRES_PASSWORD=${PGPASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

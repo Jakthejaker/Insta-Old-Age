@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: telegram-bot
+    env: docker
+    plan: free
+    dockerfilePath: Dockerfile
+    envVars:
+      - key: BOT_TOKEN
+        fromGroup: false
+      - key: PGDATABASE
+        fromGroup: false
+      - key: PGUSER
+        fromGroup: false
+      - key: PGPASSWORD
+        fromGroup: false
+      - key: PGHOST
+        fromGroup: false
+      - key: PGPORT
+        fromGroup: false
